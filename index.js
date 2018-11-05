@@ -1,0 +1,15 @@
+const express = require("express")
+const app = express()
+const bodyParser = require("body-parser")
+const cors = require("cors")
+const path = require("path")
+const config = require('./config/appConfig.js')
+const routes = require("./api/router.js")
+app.use(bodyParser.json())
+app.use(cors())
+
+app.set('port', (process.env.PORT || 3000))
+app.use('/api', routes)
+app.listen(app.get('port'), () => {
+    console.log('app running on port', app.get('port'))
+})
