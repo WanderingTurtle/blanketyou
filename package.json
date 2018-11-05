@@ -1,0 +1,19 @@
+{
+  "name": "blanketyou",
+  "version": "1.0.0",
+  "description": "facebook bot interface for user data manipulation and blanket donor/reciepient matching",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "blanketyou"
+  },
+  "keywords": [
+    "facebook",
+    "chatbot"
+  ],
+  "author": "Jack Chen",
+  "license": "ISC"
+}
