@@ -14,3 +14,11 @@ exports.testfunc = async () => {
     // let result = await foo()
     console.log(result)
 }
+
+exports.nlpSwitch = async(err, event_context) => {
+    if (err) {
+        // TODO handle error messages
+    } else {
+        // TODO handle other messages
+    }
+}

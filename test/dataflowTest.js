@@ -14,6 +14,7 @@ describe('Dataflow test, test whether requests are handled correctly.', () => {
                 {
                     sender: {id: "test_sender_id_1"},
                     recipient: {id: "test_rec_id_1"},
+                    message: {text: "dummy"}
                 }
             ]
         }]
@@ -28,18 +29,22 @@ describe('Dataflow test, test whether requests are handled correctly.', () => {
                 {
                     sender: {id: "test_sender_id_1"},
                     recipient: {id: "test_rec_id_1"},
+                    message: {text: "dummy"}
                 },
                 {
                     sender: {id: "test_sender_id_2"},
                     recipient: {id: "test_rec_id_2"},
+                    message: {text: "dummy"}
                 },
                 {
                     sender: {id: "test_sender_id_3"},
                     recipient: {id: "test_rec_id_3"},
+                    message: {text: "dummy"}
                 },
                 {
                     sender: {id: "test_sender_id_4"},
                     recipient: {id: "test_rec_id_4"},
+                    message: {text: "dummy"}
                 }
             ]
         }]
