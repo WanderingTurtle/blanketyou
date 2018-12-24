@@ -8,26 +8,23 @@ exports.messageSwitch = (req, res, next) => {
     for (let messaging_events of req.body.entry) {
         for (let event of messaging_events.messaging) {
             // console.log('hello')
-            if (event.optin) {
-                // TODO
-            } else if (event.message) {
+            if (event.message) {
                 querySession(event)
-            } else if (event.delivery) {
-                // TODO
-            } else if (event.postback) {
-                // TODO
-            } else if (event.read) {
-                // TODO
-            } else if (event.account_link) {
-                // TODO
             } else {
-                // TODO
+                // TODO received unknown messaging event
             }
         }
     }
     next()
 }
 
+//
+// event_context: {
+//     event:object -> user event from a single facebook page
+//     new:boolean -> whether the session is newly created
+//     session:object -> user conversation session 
+// }
+//
 async function querySession(event) {
     await SessionModel.findOne({psid: event.sender.id}, {}, {sort: {'updated_at':-1}}, (err, session) => {
         if(err) {

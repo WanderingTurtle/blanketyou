@@ -1,3 +1,6 @@
+var confidenceLevel = require('../../config/confidenceLevel.js')
+var questionMappings = require('../../config/questionMapping.js')
+
 // Do use async functions here and await here
 //
 // Basic function layout 
@@ -15,10 +18,51 @@ exports.testfunc = async () => {
     console.log(result)
 }
 
+// @param event_context defined in sessionFilter.js
 exports.nlpSwitch = async(err, event_context) => {
     if (err) {
         // TODO handle error messages
     } else {
-        // TODO handle other messages
+        let event = event_context.event
+        let session = event_context.session
+        if (event.greetings && event.greetings.confidence > confidenceLevel.greetings) {
+            // TODO ask first question
+        } else if (event.bye && event.bye.confidence > confidenceLevel.bye) {
+            // TODO handle bye messages
+        } else if (
+            event.quantity && 
+            event.quantity.confidence > confidenceLevel.quantity &&
+            session.last_question === "blanket_quantity"
+        ) {
+            // TODO update blanket quantity
+            // TODO update session
+            // TODO ask next question
+        } else if (
+            event.location &&
+            event.location.confidence > confidenceLevel.location &&
+            session.last_question === "location"
+        ) {
+            // TODO update donor/donee address
+            // TODO update session
+            // TODO ask next question
+        } else if (
+            event.email &&
+            event.email.confidence > confidenceLevel.email &&
+            session.last_question === "email"
+        ) {
+            // TODO update donor/donee email
+            // TODO update session
+            // TODO ask next question
+        } else {
+            // TODO handle unknown messages
+        }
+        // prepare something different for asking last question before matching
+        if (questionMappings.questions.length === session.confirmed_questions.length + 1) {
+            
+        }
+        // start donee matching process for donor or simply storing donee information
+        if (questionMappings.questions.length === session.confirmed_questions.length) {
+            // TODO     
+        }
     }
 }

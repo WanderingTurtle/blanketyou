@@ -4,8 +4,8 @@ const bodyParser = require("body-parser")
 const cors = require("cors")
 // const path = require("path")
 const mongoose = require('mongoose')
-const config = require('./config/appConfig.js')
-const {db: {host, port, name}} = config
+const appConfig = require('./config/appConfig.js')
+const {db: {host, port, name}} = appConfig
 const DB_URI = 'mongodb://' + host+ ':' + port + '/'+ name
 const routes = require("./api/router.js")
 
@@ -19,9 +19,8 @@ app.use(cors())
 
 app.use('', routes)
 db.once('open', () => {
-    console.log('connected to mongodb')
-    app.listen(config.app.port, () => {
-        console.log('app running on port', config.app.port)
+    app.listen(appConfig.app.port, () => {
+        console.log('app running on port', appConfig.app.port)
     })
 })
 

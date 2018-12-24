@@ -1,4 +1,4 @@
-const config = {
+const appConfig = {
     test: true,
     app: {
         port: 3000
@@ -10,4 +10,4 @@ const config = {
     }
 }
 
-module.exports = config;
+module.exports = appConfig;
