@@ -26,9 +26,13 @@ exports.nlpSwitch = async(err, event_context) => {
         let event = event_context.event
         let session = event_context.session
         if (event.greetings && event.greetings.confidence > confidenceLevel.greetings) {
-            // TODO ask first question
+            // TODO try to check identity, 
+            //      if identity is checked, ask first question
+            //      if not, ask identity question, set last_question to "identity"
         } else if (event.bye && event.bye.confidence > confidenceLevel.bye) {
             // TODO handle bye messages
+        } else if (session.last_question === "identity") {
+            // TODO handle identity answers
         } else if (
             event.quantity && 
             event.quantity.confidence > confidenceLevel.quantity &&

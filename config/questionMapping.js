@@ -3,7 +3,7 @@
 
 const QuestionMappings = {
     questions: [
-        "blanket_quantity", "location", "email"
+        "blanket_quantity", "email", "identity", "location"
     ],
     error: [
         "Sorry, I don't understand."
@@ -30,7 +30,9 @@ const QuestionMappings = {
     email: [
         "What is your email address?"
     ],
-    
+    identity: [
+        "Do you want to donate some blankets?"
+    ]
 }
 
 module.exports = QuestionMappings
