@@ -21,8 +21,9 @@ app.use(cors())
 
 app.use('', routes)
 db.once('open', () => {
-    app.listen(appConfig.app.port, () => {
-        console.log('app running on port', appConfig.app.port)
+    app.listen(process.env.PORT || appConfig.app.port, () => {
+        let port = app.address().port
+        console.log('app running on port', port)
         // log.getLogger('index.js').info('app running on port', appConfig.app.port)
     })
 })
