@@ -69,6 +69,7 @@ exports.nlpSwitch = async(err, event_context) => {
             // TODO
         }
         // start donee matching process for donor or simply storing donee information
+        // register/update user information
         if (questionMappings.questions.length === session.confirmed_questions.length) {
             // TODO     
         }
