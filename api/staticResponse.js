@@ -7,6 +7,11 @@ router.post('/webhook/', (req, res, next) => {
     next()
 })
 
+router.get('/webhook/', (req, res, next) => {
+    res.sendStatus(200)
+    next()
+})
+
 router.get('/', (req, res) => {
     res.send({text: 'Hello world, I am a chat bot'})
 })
