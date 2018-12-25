@@ -1,3 +1,4 @@
+const TOKEN = "EAAMvRt2DzGUBAGUDACTPPjXeM5yPQJkA6x5VbnoH2tmOHwXvzzQ4Fu6r81jdpVjosrse3m7XkEVLPHRh98hrsJcA0xFDoNcLb1eoUd5ZCUcm0kyu5Uh03Efrvn9jpdzj0ZCV37SixDoYjZAlWBeDnohsnhsLRymE6JcntZBldPSjaGIPSGOt"
 const log = require('./logger.js').getLogger("message sender")
 var request = require('request-promise-native')
 var session = require('./session')
@@ -16,7 +17,7 @@ exports.sendTextMessage = async (event_context) => {
     console.log("sending message: ", event_context.next_message)
     await request({
         uri: '', // facebook api
-        qs: {access_token: "TODO"}, // facebook api access token
+        qs: {access_token: TOKEN}, // facebook api access token
         method: 'POST',
         body: messageData,
         json: true
