@@ -1,6 +1,6 @@
 const log = require('./logger.js').getLogger("message sender")
 var request = require('request-promise-native')
-var session = require('./sessionFilter')
+var session = require('./session')
 
 exports.sendTextMessage = async (event_context) => {
     var messageData = {
@@ -13,6 +13,7 @@ exports.sendTextMessage = async (event_context) => {
         }
     }
     console.log("sending request to %s", event_context.session.psid)
+    console.log("sending message: ", event_context.next_message)
     await request({
         uri: '', // facebook api
         qs: {access_token: "TODO"}, // facebook api access token
@@ -35,5 +36,4 @@ exports.sendTextMessage = async (event_context) => {
         console.log("Failed calling send API for %s", messageData.recipient.id)
         log.error("Failed calling Send API for %s, %s", messageData.recipient.id, JSON.stringify(err));
     }) 
-    session.updateSession(event_context)
 }

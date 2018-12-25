@@ -9,7 +9,7 @@ const QuestionMappings = {
         "Sorry, I don't understand."
     ],
     greetings: [
-        "Hello! What can I help you?"
+        "Hello! We are [...] What can I help you?"
     ],
     blanket_quantity: {
         donor: [

@@ -1,3 +1,4 @@
+var log = require('./logger.js').getLogger('nlp')
 var sender = require('./messageSender.js')
 var confidenceLevel = require('../../config/confidenceLevel.js')
 var questionMappings = require('../../config/questionMapping.js')
@@ -26,36 +27,52 @@ exports.nlpSwitch = async(err, event_context) => {
     if (err) {
         // TODO handle error messages
     } else {
-        let event = event_context.event
+        let message = event_context.event.message
+        console.log(message)
+        log.info('message format: \n', message)
+        let nlp = message.nlp
         let session = event_context.session
-        console.log("hello")
-        if (event.greetings && event.greetings.confidence > confidenceLevel.greetings) {
-            // TODO try to check identity, 
-            //      if identity is checked, ask first question
+        if (nlp && nlp.greetings && nlp.greetings.confidence > confidenceLevel.greetings) {
+            // TODO try to check identity, and provide information about this org
+            //      if identity is confirmed in user text, ask first question
             //      if not, ask identity question, set last_question to "identity"
-        } else if (event.bye && event.bye.confidence > confidenceLevel.bye) {
+            let identity = judgeIdentity(message.text)
+            console.log(identity)
+            if (identity === "donor") {
+                // TODO if identity is provided as donor
+            } else if (identity === "donee") {
+                // TODO if identity is provided as donee
+            } else {
+                event_context.new_session.last_question = "identity"
+                let ran = random(Math.random(), questionMappings.identity.length)
+                event_context.next_message = questionMappings.identity[ran]
+            }
+        } else if (nlp && nlp.bye && nlp.bye.confidence > confidenceLevel.bye) {
             // TODO handle bye messages
         } else if (session.last_question === "identity") {
             // TODO handle identity answers
         } else if (
-            event.quantity && 
-            event.quantity.confidence > confidenceLevel.quantity &&
+            nlp &&
+            nlp.quantity && 
+            nlp.quantity.confidence > confidenceLevel.quantity &&
             session.last_question === "blanket_quantity"
         ) {
             // TODO update blanket quantity
             // TODO update session
             // TODO ask next question
         } else if (
-            event.location &&
-            event.location.confidence > confidenceLevel.location &&
+            nlp &&
+            nlp.location &&
+            nlp.location.confidence > confidenceLevel.location &&
             session.last_question === "location"
         ) {
             // TODO update donor/donee address
             // TODO update session
             // TODO ask next question
         } else if (
-            event.email &&
-            event.email.confidence > confidenceLevel.email &&
+            nlp &&
+            nlp.email &&
+            nlp.email.confidence > confidenceLevel.email &&
             session.last_question === "email"
         ) {
             // TODO update donor/donee email
@@ -63,6 +80,7 @@ exports.nlpSwitch = async(err, event_context) => {
             // TODO ask next question
         } else {
             // TODO handle unknown messages
+            console.log("received unknown message")
         }
         // prepare something different for asking last question before matching
         if (questionMappings.questions.length === session.confirmed_questions.length + 1) {
@@ -75,4 +93,19 @@ exports.nlpSwitch = async(err, event_context) => {
         }
     }
     sender.sendTextMessage(event_context)
+}
+
+function judgeIdentity (text) {
+    let tmp_text = text.toLowerCase()
+    if (tmp_text.indexOf('to donate') > -1 || tmp_text.indexOf('todonate') > -1) {
+        return 'donor'
+    } else if (tmp_text.indexOf('need') > -1 || tmp_text.indexOf('blanket') > -1) {
+        return 'donee'
+    } else {
+        return 'unknown'
+    }
+}
+
+function random(ran, bound) {
+    return Math.floor(ran * bound)
 }

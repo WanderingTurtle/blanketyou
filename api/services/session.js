@@ -34,13 +34,14 @@ async function querySession(event) {
             // handle error response
             // nlp.nlpSwitch(err, null)
         } else {
-            var curr_time = new Date().getTime()
-            var event_context = {event: event}
+            let curr_time = new Date().getTime()
+            let new_session = {psid: event.sender.id}
+            let event_context = {event: event, new_session: new_session}
             if (!session) {
-                event_context.session = new SessionModel({psid: event.sender.id})
+                event_context.session = new SessionModel(new_session)
                 event_context.new = true
             } else if (curr_time - session.updated_at > TIMEOUT) {
-                event_context.session = new SessionModel({psid: event.sender.id})
+                event_context.session = new SessionModel(new_session)
                 event_context.new = true
             } else {
                 event_context.session = session
@@ -49,6 +50,7 @@ async function querySession(event) {
             // TODO
             // handle successful responses
             // nlp.testfunc()
+            
             nlp.nlpSwitch(null, event_context)
         }
     })
@@ -60,17 +62,17 @@ exports.updateSession = async (event_context) => {
         {_id: event_context.session._id}, 
         event_context.new_session,
         {new: true, upsert: true}
-    ).then(session => {
-        if (err) {
-            console.log(err, messageData.recipient.id)
-            log.error(err)
-        } else if (!session) {
-            log.error(new Error("No session was updated. Previous session: \n" + JSON.stringify(event_context.session)))
-        } else {
-            console.log("updated session for %s", messageData.recipient.id)
+    ).then(
+        session => {
+            if (!session) {
+                log.error(new Error("No session was updated. Previous session: \n" + JSON.stringify(event_context.session)))
+            } else {
+                console.log("updated session for %s", session._id)
+            }
+        },
+        err => {
+            console.log("Failed updating session for %s", session._id)
+            log.error("Failed updating session for %s, %s", session._id, JSON.stringify(err));
         }
-    }).catch(err => {
-        console.log("Failed updating session for %s", messageData.recipient.id)
-        log.error("Failed updating session for %s, %s", messageData.recipient.id, JSON.stringify(err));
-    })
+    )
 }

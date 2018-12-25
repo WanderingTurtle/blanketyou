@@ -7,12 +7,15 @@ exports.register = async (identity, event_context) => {
     if (dbModel === null) return
     let newUser = event_context.session.user
     newUser._id = event_context.session.psid
-    await new dbModel(newUser).then(user => {
-        console.log("new user %s created.", user._id)
-    }).catch(err => {
-        console.log(err)
-        log.error(err)
-    })
+    await new dbModel(newUser).then(
+        user => {
+            console.log("new user %s created.", user._id)
+        },
+        err => {
+            console.log(err)
+            log.error(err)
+        }
+    )
 }
 
 exports.update = async (identity, event_context) => {
@@ -22,12 +25,15 @@ exports.update = async (identity, event_context) => {
     newUser._id = event_context.session.psid
     await dbModel.findByIdAndUpdate(
         newUser._id, newUser, {new: true, upsert: true}
-    ).then(user => {
-        console.log("updated user %s", user._id)
-    }).catch(err => {
-        console.log(err)
-        log.error(err)
-    })
+    ).then(
+        user => {
+            console.log("updated user %s", user._id)
+        },
+        err => {
+            console.log(err)
+            log.error(err)
+        }
+    )
 }
 
 function findModel(identity) {
