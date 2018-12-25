@@ -1,5 +1,6 @@
 const log = require('./logger.js').getLogger("message sender")
 var request = require('request-promise-native')
+var session = require('./sessionFilter')
 
 exports.sendTextMessage = async (event_context) => {
     var messageData = {
@@ -28,9 +29,11 @@ exports.sendTextMessage = async (event_context) => {
             } else {
                 log.info("Successfully called Send API for recipient %s", recipientId);
             }
-        } 
+        }
+        session.updateSession(event_context)
     }).catch(err => {
-        console.log("response from %s", messageData.recipient.id)
-        log.error("Failed calling Send API", err);
+        console.log("Failed calling send API for %s", messageData.recipient.id)
+        log.error("Failed calling Send API for %s, %s", messageData.recipient.id, JSON.stringify(err));
     }) 
+    session.updateSession(event_context)
 }

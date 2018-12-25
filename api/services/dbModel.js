@@ -10,13 +10,14 @@ var sessionSchema = new Schema({
     psid: {type: String, required: true}, // facebook user id
     identity: {type: String},             // donor, donee, or admin
     last_question: {type: String},
-    confirmed_questions: [{type: String}]
+    confirmed_questions: [{type: String}],
+    user: {type: Object} 
 }, {
     timestamps: timestamp_spec
 })
 
 var donorSchema = new Schema({
-    psid: {type: String, required: true},
+    _id: {type: String, required: true}, // use psid as _id
     email: {type: String},
     quantity: {type: Number},
     address: {type: String},
@@ -25,7 +26,7 @@ var donorSchema = new Schema({
 })
 
 var doneeSchema = new Schema({
-    psid: {type: String, required: true},
+    _id: {type: String, required: true}, // use psid as _id
     email: {type: String},
     quantity: {type: Number},
     address: {type: String},

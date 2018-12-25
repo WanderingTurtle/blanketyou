@@ -1,4 +1,4 @@
-const log4jsConfig = {
+const logConfig = {
     appenders: {
         access: {
           type: "dateFile",
@@ -28,4 +28,4 @@ const log4jsConfig = {
     }
 }
 
-module.exports = log4jsConfig
+module.exports = logConfig

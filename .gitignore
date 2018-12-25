@@ -1,9 +1,11 @@
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+logs/*
+# make sure logs directory exists
+!logs/exist 
 
 # Runtime data
 pids

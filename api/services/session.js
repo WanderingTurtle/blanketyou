@@ -55,16 +55,22 @@ async function querySession(event) {
 }
 
 exports.updateSession = async (event_context) => {
+    console.log("updating session for user: %s", event_context.session._id)
     await SessionModel.findByIdAndUpdate(
         {_id: event_context.session._id}, 
         event_context.new_session,
         {new: true, upsert: true}
-    ).then((err, session) => {
+    ).then(session => {
         if (err) {
+            console.log(err, messageData.recipient.id)
             log.error(err)
-        }
-        if (!session) {
+        } else if (!session) {
             log.error(new Error("No session was updated. Previous session: \n" + JSON.stringify(event_context.session)))
+        } else {
+            console.log("updated session for %s", messageData.recipient.id)
         }
+    }).catch(err => {
+        console.log("Failed updating session for %s", messageData.recipient.id)
+        log.error("Failed updating session for %s, %s", messageData.recipient.id, JSON.stringify(err));
     })
 }
