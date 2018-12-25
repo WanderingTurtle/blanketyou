@@ -1,3 +1,4 @@
+var sender = require('./messageSender.js')
 var confidenceLevel = require('../../config/confidenceLevel.js')
 var questionMappings = require('../../config/questionMapping.js')
 
@@ -20,11 +21,14 @@ exports.testfunc = async () => {
 
 // @param event_context defined in sessionFilter.js
 exports.nlpSwitch = async(err, event_context) => {
+    // TODO save everything to event_context
+    //      save response to user in event_context.next_message
     if (err) {
         // TODO handle error messages
     } else {
         let event = event_context.event
         let session = event_context.session
+        console.log("hello")
         if (event.greetings && event.greetings.confidence > confidenceLevel.greetings) {
             // TODO try to check identity, 
             //      if identity is checked, ask first question
@@ -62,11 +66,12 @@ exports.nlpSwitch = async(err, event_context) => {
         }
         // prepare something different for asking last question before matching
         if (questionMappings.questions.length === session.confirmed_questions.length + 1) {
-            
+            // TODO
         }
         // start donee matching process for donor or simply storing donee information
         if (questionMappings.questions.length === session.confirmed_questions.length) {
             // TODO     
         }
     }
+    sender.sendTextMessage(event_context)
 }

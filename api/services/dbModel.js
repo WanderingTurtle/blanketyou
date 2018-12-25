@@ -19,7 +19,7 @@ var donorSchema = new Schema({
     psid: {type: String, required: true},
     email: {type: String},
     quantity: {type: Number},
-    address: {type: String}
+    address: {type: String},
 }, {
     timestamps: timestamp_spec
 })
@@ -28,7 +28,9 @@ var doneeSchema = new Schema({
     psid: {type: String, required: true},
     email: {type: String},
     quantity: {type: Number},
-    address: {type: String}
+    address: {type: String},
+    receive_quantity: {type: Number}
+
 }, {
     timestamps: timestamp_spec
 })

@@ -1,3 +1,4 @@
+var log = require('./logger').getLogger('session filter')
 var nlp = require('./nlp.js')
 
 const TIMEOUT = 86500000 // about one day
@@ -26,6 +27,7 @@ exports.messageSwitch = (req, res, next) => {
 // }
 //
 async function querySession(event) {
+    console.log('processing user %s', event.sender.id)
     await SessionModel.findOne({psid: event.sender.id}, {}, {sort: {'updated_at':-1}}, (err, session) => {
         if(err) {
             // TODO
@@ -46,8 +48,23 @@ async function querySession(event) {
             }
             // TODO
             // handle successful responses
-            nlp.testfunc()
-            // nlp.nlpSwitch(null, event_context)
+            // nlp.testfunc()
+            nlp.nlpSwitch(null, event_context)
+        }
+    })
+}
+
+exports.updateSession = async (event_context) => {
+    await SessionModel.findByIdAndUpdate(
+        {_id: event_context.session._id}, 
+        event_context.new_session,
+        {new: true, upsert: true}
+    ).then((err, session) => {
+        if (err) {
+            log.error(err)
+        }
+        if (!session) {
+            log.error(new Error("No session was updated. Previous session: \n" + JSON.stringify(event_context.session)))
         }
     })
 }
