@@ -6,6 +6,7 @@ var SessionModel = require('./dbModel').Session
 
 exports.messageSwitch = (req, res, next) => {
     // console.log('hello session')
+    console.log(req.body)
     for (let messaging_events of req.body.entry) {
         for (let event of messaging_events.messaging) {
             // console.log('hello')
