@@ -10,7 +10,7 @@ const {db: {host, port, name}} = appConfig
 const DB_URI = 'mongodb://' + host+ ':' + port + '/'+ name
 const routes = require("./api/router.js")
 
-mongoose.connect(DB_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI || DB_URI, { useNewUrlParser: true })
 mongoose.Promise = global.Promise
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'DB connection error: '))
