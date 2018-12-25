@@ -4,8 +4,8 @@ const appConfig = {
         port: 3000
     },
     db: {
-        host: 'localhost',
-        port: 27017,
+        host: 'mongodb://heroku_5q37h2cp:blanketyou!23@ds143604.mlab.com:43604/heroku_5q37h2cp',
+        port: "",
         name: 'blanketsyou'
     }
 }
