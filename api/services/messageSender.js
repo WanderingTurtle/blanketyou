@@ -1,4 +1,4 @@
-const FACEBOOK_BASE_URL = "https://graph.facebook.com/v3.2/"
+const FACEBOOK_BASE_URL = "https://graph.facebook.com/v2.6/me/messages"
 const TOKEN = "EAAMvRt2DzGUBAGUDACTPPjXeM5yPQJkA6x5VbnoH2tmOHwXvzzQ4Fu6r81jdpVjosrse3m7XkEVLPHRh98hrsJcA0xFDoNcLb1eoUd5ZCUcm0kyu5Uh03Efrvn9jpdzj0ZCV37SixDoYjZAlWBeDnohsnhsLRymE6JcntZBldPSjaGIPSGOt"
 const log = require('./logger.js').getLogger("message sender")
 var request = require('request-promise-native')
@@ -6,6 +6,7 @@ var session = require('./session')
 
 exports.sendTextMessage = async (event_context) => {
     var messageData = {
+        message_type: "RESPONSE",
         recipient: {
             id: event_context.session.psid
         },
