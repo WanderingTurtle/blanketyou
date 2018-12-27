@@ -33,7 +33,7 @@ exports.nlpSwitch = async(err, event_context) => {
         let entity = message.nlp.entities
         let session = event_context.session
         console.log(entity)
-        if (entity && entity.greetings && entity.greetings.confidence > confidenceLevel.greetings) {
+        if (entity && entity.greetings && entity.greetings[0].value === 'true') {
             // TODO try to check identity, and provide information about this org
             //      if identity is confirmed in user text, ask first question
             //      if not, ask identity question, set last_question to "identity"
@@ -48,14 +48,14 @@ exports.nlpSwitch = async(err, event_context) => {
                 let ran = random(Math.random(), questionMappings.identity.length)
                 event_context.next_message = questionMappings.identity[ran]
             }
-        } else if (entity && entity.bye && entity.bye.confidence > confidenceLevel.bye) {
+        } else if (entity && entity.bye && entity.bye[0].confidence > confidenceLevel.bye) {
             // TODO handle bye messages
         } else if (session.last_question === "identity") {
             // TODO handle identity answers
         } else if (
             entity &&
             entity.quantity && 
-            entity.quantity.confidence > confidenceLevel.quantity &&
+            entity.quantity[0].confidence > confidenceLevel.quantity &&
             session.last_question === "blanket_quantity"
         ) {
             // TODO update blanket quantity
@@ -64,7 +64,7 @@ exports.nlpSwitch = async(err, event_context) => {
         } else if (
             entity &&
             entity.location &&
-            entity.location.confidence > confidenceLevel.location &&
+            entity.location[0].confidence > confidenceLevel.location &&
             session.last_question === "location"
         ) {
             // TODO update donor/donee address
@@ -73,7 +73,7 @@ exports.nlpSwitch = async(err, event_context) => {
         } else if (
             entity &&
             entity.email &&
-            entity.email.confidence > confidenceLevel.email &&
+            entity.email[0].confidence > confidenceLevel.email &&
             session.last_question === "email"
         ) {
             // TODO update donor/donee email
