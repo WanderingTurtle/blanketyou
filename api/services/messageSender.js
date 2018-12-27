@@ -1,3 +1,4 @@
+const FACEBOOK_BASE_URL = "https://graph.facebook.com/v3.2/"
 const TOKEN = "EAAMvRt2DzGUBAGUDACTPPjXeM5yPQJkA6x5VbnoH2tmOHwXvzzQ4Fu6r81jdpVjosrse3m7XkEVLPHRh98hrsJcA0xFDoNcLb1eoUd5ZCUcm0kyu5Uh03Efrvn9jpdzj0ZCV37SixDoYjZAlWBeDnohsnhsLRymE6JcntZBldPSjaGIPSGOt"
 const log = require('./logger.js').getLogger("message sender")
 var request = require('request-promise-native')
@@ -9,14 +10,13 @@ exports.sendTextMessage = async (event_context) => {
             id: event_context.session.psid
         },
         message: {
-            text: event_context.next_message, // TODO
-            metadata: "DEVELOPER_DEFINED_METADATA"
+            text: event_context.next_message
         }
     }
     console.log("sending request to %s", event_context.session.psid)
     console.log("sending message: ", event_context.next_message)
     await request({
-        uri: '', // facebook api
+        uri: FACEBOOK_BASE_URL, // facebook api
         qs: {access_token: TOKEN}, // facebook api access token
         method: 'POST',
         body: messageData,
@@ -24,8 +24,9 @@ exports.sendTextMessage = async (event_context) => {
     }).then((response) => {
         console.log("response from %s", messageData.recipient.id)
         if (response.statusCode == 200) {
-            let recipientId = body.recipient_id;
-            let messageId = body.message_id;
+            let recipientId = response.body.recipient_id;
+            let messageId = response.body.message_id;
+            console.log(body)
             if (messageId) {
                 log.info("Successfully sent message with id %s to recipient %s", messageId, recipientId);
             } else {
