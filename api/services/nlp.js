@@ -32,6 +32,7 @@ exports.nlpSwitch = async(err, event_context) => {
         log.info('message format: \n', message)
         let entity = message.nlp.entities
         let session = event_context.session
+        console.log(entity)
         if (entity && entity.greetings && entity.greetings.confidence > confidenceLevel.greetings) {
             // TODO try to check identity, and provide information about this org
             //      if identity is confirmed in user text, ask first question
