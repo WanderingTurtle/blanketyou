@@ -10,6 +10,7 @@ exports.register = async (identity, event_context) => {
     await new dbModel(newUser).then(
         user => {
             console.log("user\nnew user %s created.", user._id)
+            return user
         },
         err => {
             console.log("user\n", err)
@@ -28,6 +29,7 @@ exports.update = async (identity, event_context) => {
     ).then(
         user => {
             console.log("user\nupdated user %s", user._id)
+            return user
         },
         err => {
             console.log("user\n", err)
