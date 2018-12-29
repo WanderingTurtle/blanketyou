@@ -35,16 +35,10 @@ var doneeSchema = new Schema({
     timestamps: timestamp_spec
 })
 
-var qaMappingSchema = new Schema({
-    qid: {type: String, required: true}, // question id, use "_" connected short words to summarize the question
-    answers: [{type: String}], // possible answers, provide a few selections to allow randomization
-})
-
 var session = mongoose.model('Session', sessionSchema)
 var donor = mongoose.model('Donor', donorSchema)
 var donee = mongoose.model('Donee', doneeSchema)
-var qaMapping = mongoose.model('QaMapping', qaMappingSchema)
+
 exports.Session = session
 exports.Donor = donor
 exports.Donee = donee
-exports.QaMapping = qaMapping
