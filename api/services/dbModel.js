@@ -18,20 +18,19 @@ var sessionSchema = new Schema({
 
 var donorSchema = new Schema({
     _id: {type: String, required: true}, // use psid as _id
-    email: {type: String},
-    quantity: {type: Number},
-    address: {type: String},
+    email: {type: String, default: "Not provided"},
+    quantity: {type: Number, default: 0},
+    address: {type: String, default: "Not provided"},
 }, {
     timestamps: timestamp_spec
 })
 
 var doneeSchema = new Schema({
     _id: {type: String, required: true}, // use psid as _id
-    email: {type: String},
-    quantity: {type: Number},
-    address: {type: String},
-    receive_quantity: {type: Number}
-
+    email: {type: String, default: "Not provided"},
+    quantity: {type: Number, default: 0},
+    address: {type: String, default: "Not provided"},
+    recommend_times: {type: Number, default: Number.MIN_SAFE_INTEGER} // −9007199254740991
 }, {
     timestamps: timestamp_spec
 })

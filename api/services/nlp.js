@@ -17,7 +17,7 @@ exports.testfunc = async () => {
 
     // When the function is not a promise (e.g. foo() returns a promise), do the following
     // let result = await foo()
-    console.log(result)
+    console.log("nlp\n", result)
 }
 
 // @param event_context defined in sessionFilter.js
@@ -28,17 +28,16 @@ exports.nlpSwitch = async(err, event_context) => {
         // TODO handle error messages
     } else {
         let message = event_context.event.message
-        console.log(message)
-        log.info('message format: \n', message)
+        console.log("nlp\n message format",message)
         let entity = message.nlp.entities
         let session = event_context.session
-        console.log(entity)
+        console.log("nlp\n entity", entity)
         if (entity && entity.greetings && entity.greetings[0].value === 'true') {
             // TODO try to check identity, and provide information about this org
             //      if identity is confirmed in user text, ask first question
             //      if not, ask identity question, set last_question to "identity"
             let identity = judgeIdentity(message.text)
-            console.log(identity)
+            console.log("nlp\n", identity)
             if (identity === "donor") {
                 // TODO if identity is provided as donor
             } else if (identity === "donee") {
@@ -81,7 +80,7 @@ exports.nlpSwitch = async(err, event_context) => {
             // TODO ask next question
         } else {
             // TODO handle unknown messages
-            console.log("received unknown message")
+            console.log("nlp\nreceived unknown message")
         }
         // prepare something different for asking last question before matching
         if (questionMappings.questions.length === session.confirmed_questions.length + 1) {

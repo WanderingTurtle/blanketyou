@@ -9,10 +9,10 @@ exports.register = async (identity, event_context) => {
     newUser._id = event_context.session.psid
     await new dbModel(newUser).then(
         user => {
-            console.log("new user %s created.", user._id)
+            console.log("user\nnew user %s created.", user._id)
         },
         err => {
-            console.log(err)
+            console.log("user\n", err)
             log.error(err)
         }
     )
@@ -27,10 +27,10 @@ exports.update = async (identity, event_context) => {
         newUser._id, newUser, {new: true, upsert: true}
     ).then(
         user => {
-            console.log("updated user %s", user._id)
+            console.log("user\nupdated user %s", user._id)
         },
         err => {
-            console.log(err)
+            console.log("user\n", err)
             log.error(err)
         }
     )

@@ -6,7 +6,7 @@ var SessionModel = require('./dbModel').Session
 
 exports.messageSwitch = (req, res, next) => {
     // console.log('hello session')
-    console.log(req.body)
+    console.log('session\n', req.body)
     if (Object.keys(req.body).length !== 0){
         for (let messaging_events of req.body.entry) {
             for (let event of messaging_events.messaging) {
@@ -30,7 +30,7 @@ exports.messageSwitch = (req, res, next) => {
 // }
 //
 async function querySession(event) {
-    console.log('processing user %s', event.sender.id)
+    console.log('session\nprocessing user %s', event.sender.id)
     await SessionModel.findOne({psid: event.sender.id}, {}, {sort: {'updated_at':-1}}, (err, session) => {
         if(err) {
             // TODO
@@ -60,7 +60,7 @@ async function querySession(event) {
 }
 
 exports.updateSession = async (event_context) => {
-    console.log("updating session for user: %s", event_context.session._id)
+    console.log("session\nupdating session for user: %s", event_context.session._id)
     await SessionModel.findByIdAndUpdate(
         {_id: event_context.session._id}, 
         event_context.new_session,
@@ -70,11 +70,11 @@ exports.updateSession = async (event_context) => {
             if (!session) {
                 log.error(new Error("No session was updated. Previous session: \n" + JSON.stringify(event_context.session)))
             } else {
-                console.log("updated session for %s", session._id)
+                console.log("session\nupdated session for %s", session._id)
             }
         },
         err => {
-            console.log("Failed updating session for %s", session._id)
+            console.log("session\nFailed updating session for %s", session._id)
             log.error("Failed updating session for %s, %s", session._id, JSON.stringify(err));
         }
     )

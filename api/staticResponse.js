@@ -11,7 +11,7 @@ router.post('/webhook', (req, res, next) => {
 // {'hub.mode': ..., 'hub.challenge': ..., 'hub.verify_token': ...}
 //
 router.get('/webhook', (req, res, next) => {
-    console.log(req.query)
+    console.log("static response\n", req.query)
     res.status(200)
     res.send(req.query['hub.challenge'])
     next()
