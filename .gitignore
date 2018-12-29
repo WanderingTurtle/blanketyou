@@ -64,3 +64,6 @@ typings/
 
 # help files local to developers
 *.bat
+
+# irrelavant pictures
+*.png
