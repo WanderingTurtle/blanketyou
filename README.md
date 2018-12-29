@@ -11,7 +11,7 @@ Partition the events based on their types. In message handler, read the event ob
 ### 4. Send Message (/api/services/messageSender.js)
 Send messages to facebook via facebook api asynchronously. Errors are written in both console logs and log files (in case this application is deployed in Linux machines).
 
-#Config Files
+## Config Files
 ### appConfig.js
 Include configurations for server and database
 ### confidenceLevel.js
