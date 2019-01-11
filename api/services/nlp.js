@@ -140,8 +140,15 @@ exports.nlpSwitch = async(err, event_context) => {
                 console.log("nlp:\nreceived unknown message")
                 // TODO ask last question again
                 let last = session.last_question
-                let ran = random(questionMappings[last].length)
-                event_context.next_message = questionMappings[last][ran]
+                // check if the question is already confirmed.
+                if (
+                    !session.identity ||
+                    session.identity === "unknown" ||
+                    session.confirmed_questions.indexOf(last) === -1
+                ) {
+                    let ran = random(questionMappings[last].length)
+                    event_context.next_message = questionMappings[last][ran]    
+                }
             }
             // prepare something different for asking last question before matching
             if (questionMappings.questions.length === confirm_count + 1) {
