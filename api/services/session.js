@@ -61,9 +61,19 @@ async function querySession(event) {
 
 exports.updateSession = async (event_context) => {
     console.log("session\nupdating session for user: %s", event_context.session._id)
+    // delete empty update params
+    let new_session = event_context.new_session
+    for (let key of Object.keys(new_session)) {
+        if (key.startsWith("$")) {
+            let obj = new_session[key]
+            if (Object.keys(obj).length === 0) {
+                delete new_session[key]
+            }
+        }
+    }
     await SessionModel.findByIdAndUpdate(
         {_id: event_context.session._id}, 
-        event_context.new_session,
+        new_session,
         {new: true, upsert: true}
     ).then(
         session => {
