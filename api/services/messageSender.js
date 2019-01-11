@@ -12,8 +12,8 @@ exports.sendTextMessage = async (event_context) => {
             text: event_context.next_message
         }
     }
-    console.log("message sender\nsending request to %s", event_context.session.psid)
-    console.log("message sender\nsending message: ", event_context.next_message)
+    console.log("message sender:\nsending request to %s", event_context.session.psid)
+    console.log("message sender:\nsending message: ", event_context.next_message)
     await request({
         uri: FBConfig.BASE_URL, // facebook api
         qs: {access_token: FBConfig.TOKEN}, // facebook api access token

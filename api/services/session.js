@@ -74,8 +74,8 @@ exports.updateSession = async (event_context) => {
             }
         },
         err => {
-            console.log("session\nFailed updating session for %s", session._id)
-            log.error("Failed updating session for %s, %s", session._id, JSON.stringify(err));
+            console.log("session\nFailed updating session for %s", event_context.session._id)
+            log.error("Failed updating session for %s, %s", event_context.session._id, JSON.stringify(err));
         }
     )
 }

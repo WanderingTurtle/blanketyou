@@ -19,7 +19,7 @@ exports.testfunc = async () => {
 
     // When the function is not a promise (e.g. foo() returns a promise), do the following
     // let result = await foo()
-    console.log("nlp\n", result)
+    console.log("nlp:\n", result)
 }
 
 // @param event_context defined in sessionFilter.js
@@ -30,20 +30,20 @@ exports.nlpSwitch = async(err, event_context) => {
         // TODO handle error messages
     } else {
         let message = event_context.event.message
-        console.log("nlp\n message format",message)
+        console.log("nlp:\n message format",message)
         let entity = message.nlp.entities
         let session = event_context.session
         let confirm_count = session.confirmed_questions? 0 : session.confirmed_questions.length
         event_context.new_session = {}
         let new_session = event_context.new_session
         new_session["$set"] = {}
-        console.log("nlp\n entity", entity)
+        console.log("nlp:\n entity", entity)
         if (entity && entity.greetings && entity.greetings[0].value === 'true') {
             // TODO try to check identity, and provide information about this org
             //      if identity is confirmed in user text, ask first question
             //      if not, ask identity question, set last_question to "identity"
             let identity = judgeIdentity(message.text)
-            console.log("nlp\n", identity)
+            console.log("nlp:\n", identity)
             if (identity === "donor") {
                 // TODO if identity is provided as donor
                 new_session["$set"].identity = "donor"
@@ -71,11 +71,13 @@ exports.nlpSwitch = async(err, event_context) => {
                 new_session["$set"].identity = "donor"
                 let ran = random(questionMappings.blanket_quantity['donor'].length)
                 event_context.next_message = questionMappings.blanket_quantity['donor'][ran]
+                new_session["$set"].last_question = "blanket_quantity"
             } else if (identity === "donee") {
                 // TODO if identity is provided as donee
                 new_session["$set"].identity = "donee"
                 let ran = random(questionMappings.blanket_quantity['donee'].length)
                 event_context.next_message = questionMappings.blanket_quantity['donee'][ran]
+                new_session["$set"].last_question = "blanket_quantity"
             } else {
                 new_session["$set"].last_question = "identity"
                 let ran = random(questionMappings.error_again.length)
@@ -135,7 +137,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 new_session["$set"]["user.email"] = email
             } else {
                 // TODO handle unknown messages
-                console.log("nlp\nreceived unknown message")
+                console.log("nlp:\nreceived unknown message")
                 // TODO ask last question again
                 let last = session.last_question
                 let ran = random(questionMappings[last].length)
@@ -194,6 +196,7 @@ exports.nlpSwitch = async(err, event_context) => {
             }
         }
     }
+    console.log(event_context)
     sender.sendTextMessage(event_context)
 }
 
@@ -227,4 +230,8 @@ function stringfyUserInfo(userList) {
         }
     }
     return results
+}
+
+function isNumber(text) {
+
 }
