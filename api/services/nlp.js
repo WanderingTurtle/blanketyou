@@ -33,7 +33,9 @@ exports.nlpSwitch = async(err, event_context) => {
         console.log("nlp\n message format",message)
         let entity = message.nlp.entities
         let session = event_context.session
-        session.user = {_id: session.psid}
+        event_context.new_session = {}
+        let new_session = event_context.new_session
+        new_session["$set"] = {}
         console.log("nlp\n entity", entity)
         if (entity && entity.greetings && entity.greetings[0].value === 'true') {
             // TODO try to check identity, and provide information about this org
@@ -43,16 +45,16 @@ exports.nlpSwitch = async(err, event_context) => {
             console.log("nlp\n", identity)
             if (identity === "donor") {
                 // TODO if identity is provided as donor
-                session.identity = "donor"
+                new_session["$set"].identity = "donor"
                 let ran = random(questionMappings.blanket_quantity['donor'].length)
                 event_context.next_message = questionMappings.blanket_quantity['donor'][ran]
             } else if (identity === "donee") {
                 // TODO if identity is provided as donee
-                session.identity = "donee"
+                new_session["$set"].identity = "donee"
                 let ran = random(questionMappings.blanket_quantity['donee'].length)
                 event_context.next_message = questionMappings.blanket_quantity['donee'][ran]
             } else {
-                event_context.new_session.last_question = "identity"
+                new_session["$set"].last_question = "identity"
                 let ran = random(questionMappings.identity.length)
                 event_context.next_message = questionMappings.identity[ran]
             }
@@ -65,16 +67,16 @@ exports.nlpSwitch = async(err, event_context) => {
             let identity = judgeIdentity(message.text)
             if (identity === "donor") {
                 // TODO if identity is provided as donor
-                session.identity = "donor"
+                new_session["$set"].identity = "donor"
                 let ran = random(questionMappings.blanket_quantity['donor'].length)
                 event_context.next_message = questionMappings.blanket_quantity['donor'][ran]
             } else if (identity === "donee") {
                 // TODO if identity is provided as donee
-                session.identity = "donee"
+                new_session["$set"].identity = "donee"
                 let ran = random(questionMappings.blanket_quantity['donee'].length)
                 event_context.next_message = questionMappings.blanket_quantity['donee'][ran]
             } else {
-                event_context.new_session.last_question = "identity"
+                new_session["$set"].last_question = "identity"
                 let ran = random(questionMappings.error_again.length)
                 event_context.next_message = questionMappings.error_again[ran]
                 ran = random(questionMappings.identity.length)
@@ -83,21 +85,23 @@ exports.nlpSwitch = async(err, event_context) => {
         } 
         // questions that count toward confirmed_questions
         if (session.identity) {
+            new_session["$push"] = {}
+            new_session["$set"].user = {}
             if (
                 entity &&
                 entity.quantity && 
                 entity.quantity[0].confidence > confidenceLevel.quantity &&
-                session.last_question === "blanket_quantity"
+                event_context.new_session.last_question === "blanket_quantity"
             ) {
                 // TODO update blanket quantity
                 // TODO update session
                 // TODO ask next question
-                session.confirmed_questions.push("blanket_quantity")
+                new_session["$push"].confirmed_questions = "blanket_quantity"
                 let quantity = entity.quantity.value
-                session.user.quantity =  quantity
+                new_session["$set"]["user.quantity"] =  quantity
                 let ran = random(questionMappings.location.length)
                 event_context.next_message = questionMappings.location[ran]
-                session.last_question = "location"
+                new_session["$set"].last_question = "location"
             } else if (
                 entity &&
                 entity.location &&
@@ -107,12 +111,12 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update donor/donee address
                 // TODO update session
                 // TODO ask next question
-                session.confirmed_questions.push("location")
+                new_session["$push"].confirmed_questions = "location"
                 let addr = entity.location.value
-                session.user.address = addr
+                new_session["$set"]["user.address"] = addr
                 let ran = random(questionMappings.email.length)
                 event_context.next_message = questionMappings.email[ran]
-                session.last_question = "email"
+                new_session["$set"].last_question = "email"
             } else if (
                 entity &&
                 entity.email &&
@@ -122,9 +126,9 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update donor/donee email
                 // TODO update session
                 // TODO ask next question
-                session.confirmed_questions.push("email")
+                new_session["$push"].confirmed_questions = "email"
                 let email = entity.email.value
-                session.user.email = email
+                new_session["$set"]["user.email"] = email
             } else {
                 // TODO handle unknown messages
                 console.log("nlp\nreceived unknown message")
@@ -169,7 +173,7 @@ exports.nlpSwitch = async(err, event_context) => {
                         break;
                     case "donee":
                         user.update(event_context)
-                        event_context.next_message = "Your information is registered. " + stringfyUserInfo(event_context.session.user)
+                        event_context.next_message = "Your information is registered."
                         break;
                     default:
                         console.log("Found unknown identity")
@@ -177,8 +181,9 @@ exports.nlpSwitch = async(err, event_context) => {
                         event_context.next_message = questionMappings.error[ran]
                         break;
                 }
-                session.last_question = "done"
+                new_session["$set"].last_question = "done"
             }
+            
             if (session.last_question === "done") {
                 let ran = random(questionMappings.done.length)
                 event_context.next_message = questionMappings.done[ran]
