@@ -8,7 +8,10 @@ exports.match = async (donor) => {
     quantity = quantity + 1
     let cooldown = new Date().getTime() - matcherConfig.recommend_cooldown
     await 
-        dbModel.find({updated_at: {$lt: cooldown}})
+        dbModel.find({
+            updated_at: {$lt: cooldown}, 
+            recommend_times: {$lt: matcherConfig.max_recommend_times}
+        })
         .sort('recommend_times')
         .limit(3)
         .then(donees => {

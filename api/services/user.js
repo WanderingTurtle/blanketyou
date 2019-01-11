@@ -19,8 +19,8 @@ exports.register = async (identity, event_context) => {
     )
 }
 
-exports.update = async (identity, event_context) => {
-    let dbModel = findModel(identity)
+exports.update = async (event_context) => {
+    let dbModel = findModel(event_context.session.identity)
     if (dbModel === null) return
     let newUser = event_context.session.user
     newUser._id = event_context.session.psid
