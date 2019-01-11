@@ -177,8 +177,9 @@ exports.nlpSwitch = async(err, event_context) => {
                         event_context.next_message = questionMappings.error[ran]
                         break;
                 }
-                event_context.session.last_question = "done"
-            } else {
+                session.last_question = "done"
+            }
+            if (session.last_question === "done") {
                 let ran = random(questionMappings.done.length)
                 event_context.next_message = questionMappings.done[ran]
             }
