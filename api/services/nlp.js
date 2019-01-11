@@ -33,6 +33,7 @@ exports.nlpSwitch = async(err, event_context) => {
         console.log("nlp\n message format",message)
         let entity = message.nlp.entities
         let session = event_context.session
+        let confirm_count = session.confirmed_questions? 0 : session.confirmed_questions.length
         event_context.new_session = {}
         let new_session = event_context.new_session
         new_session["$set"] = {}
@@ -97,6 +98,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update session
                 // TODO ask next question
                 new_session["$push"].confirmed_questions = "blanket_quantity"
+                confirm_count += 1
                 let quantity = entity.quantity.value
                 new_session["$set"]["user.quantity"] =  quantity
                 let ran = random(questionMappings.location.length)
@@ -112,6 +114,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update session
                 // TODO ask next question
                 new_session["$push"].confirmed_questions = "location"
+                confirm_count += 1
                 let addr = entity.location.value
                 new_session["$set"]["user.address"] = addr
                 let ran = random(questionMappings.email.length)
@@ -127,6 +130,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update session
                 // TODO ask next question
                 new_session["$push"].confirmed_questions = "email"
+                confirm_count += 1
                 let email = entity.email.value
                 new_session["$set"]["user.email"] = email
             } else {
@@ -138,7 +142,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 event_context.next_message = questionMappings[last][ran]
             }
             // prepare something different for asking last question before matching
-            if (questionMappings.questions.length === session.confirmed_questions.length + 1) {
+            if (questionMappings.questions.length === confirm_count + 1) {
                 // TODO
                 if (session.identity === "donor") {
                     event_context.next_message += " (After this question, matching process will start. The matching process could take a while, thank you for your patience)"
@@ -150,7 +154,7 @@ exports.nlpSwitch = async(err, event_context) => {
             // start donee matching process for donor or simply storing donee information
             // register/update user information
             if (
-                questionMappings.questions.length === session.confirmed_questions.length &&
+                questionMappings.questions.length === confirm_count &&
                 session.last_question !== "done"
             ) {
                 // TODO
