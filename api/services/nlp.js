@@ -37,7 +37,7 @@ exports.nlpSwitch = async(err, event_context) => {
         let new_session = event_context.new_session
         new_session["$set"] = {}
         console.log("nlp:\n entity", entity)
-        if (entity && entity.greetings && entity.greetings[0].value === 'true') {
+        if (entity && entity.greetings && entity.greetings[0].confidence > confidenceLevel.greetings) {
             // TODO try to check identity, and provide information about this org
             //      if identity is confirmed in user text, ask first question
             //      if not, ask identity question, set last_question to "identity"
@@ -147,7 +147,10 @@ exports.nlpSwitch = async(err, event_context) => {
                 if (
                     !session.identity ||
                     session.identity === "unknown" ||
-                    (last !== "identity"&& session.confirmed_questions.indexOf(last) === -1)
+                    (
+                        last !== "identity" && 
+                        session.confirmed_questions.indexOf(last) === -1
+                    )
                 ) {
                     let ran = random(questionMappings[last].length)
                     event_context.next_message = questionMappings[last][ran]    
