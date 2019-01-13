@@ -42,10 +42,8 @@ async function querySession(event) {
             let event_context = {event: event, new_session: new_session}
             if (!session) {
                 event_context.session = new SessionModel(new_session)
-                event_context.new_session = new_session
             } else if (curr_time - session.updated_at > TIMEOUT) {
                 event_context.session = new SessionModel(new_session)
-                event_context.new_session = new_session
             } else {
                 event_context.session = session
                 event_context.new_session = {}
