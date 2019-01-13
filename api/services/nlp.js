@@ -34,7 +34,6 @@ exports.nlpSwitch = async(err, event_context) => {
         let entity = message.nlp.entities
         let session = event_context.session
         let confirm_count = session.confirmed_questions? 0 : session.confirmed_questions.length
-        event_context.new_session = {}
         let new_session = event_context.new_session
         new_session["$set"] = {}
         console.log("nlp:\n entity", entity)
