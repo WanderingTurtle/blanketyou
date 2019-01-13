@@ -26,16 +26,16 @@ exports.testfunc = async () => {
 exports.nlpSwitch = async(err, event_context) => {
     // TODO save everything to event_context
     //      save response to user in event_context.next_message
+    let message = event_context.event.message
+    console.log("nlp:\n message format",message)
+    let entity = message.nlp.entities
+    let session = event_context.session
+    let confirm_count = session.confirmed_questions? 0 : session.confirmed_questions.length
+    let new_session = event_context.new_session
+    new_session["$set"] = {}
     if (err) {
         // TODO handle error messages
     } else {
-        let message = event_context.event.message
-        console.log("nlp:\n message format",message)
-        let entity = message.nlp.entities
-        let session = event_context.session
-        let confirm_count = session.confirmed_questions? 0 : session.confirmed_questions.length
-        let new_session = event_context.new_session
-        new_session["$set"] = {}
         console.log("nlp:\n entity", entity)
         if (entity && entity.greetings && entity.greetings[0].confidence > confidenceLevel.greetings) {
             // TODO try to check identity, and provide information about this org
