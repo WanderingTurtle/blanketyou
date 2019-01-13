@@ -44,20 +44,21 @@ exports.nlpSwitch = async(err, event_context) => {
             //      if not, ask identity question, set last_question to "identity"
             let identity = judgeIdentity(message.text)
             console.log("nlp:\n", identity)
+            event_context.next_message = "Hello! "
             if (identity === "donor") {
                 // TODO if identity is provided as donor
                 new_session["$set"].identity = "donor"
                 let ran = random(questionMappings.blanket_quantity['donor'].length)
-                event_context.next_message = questionMappings.blanket_quantity['donor'][ran]
+                event_context.next_message += questionMappings.blanket_quantity['donor'][ran]
             } else if (identity === "donee") {
                 // TODO if identity is provided as donee
                 new_session["$set"].identity = "donee"
                 let ran = random(questionMappings.blanket_quantity['donee'].length)
-                event_context.next_message = questionMappings.blanket_quantity['donee'][ran]
+                event_context.next_message += questionMappings.blanket_quantity['donee'][ran]
             } else {
                 new_session["$set"].last_question = "identity"
                 let ran = random(questionMappings.identity.length)
-                event_context.next_message = questionMappings.identity[ran]
+                event_context.next_message += questionMappings.identity[ran]
             }
         } else if (entity && entity.bye && entity.bye[0].confidence > confidenceLevel.bye) {
             // TODO handle bye messages
