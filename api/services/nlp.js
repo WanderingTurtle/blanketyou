@@ -147,7 +147,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 if (
                     !session.identity ||
                     session.identity === "unknown" ||
-                    session.confirmed_questions.indexOf(last) === -1
+                    (last !== "identity"&& session.confirmed_questions.indexOf(last) === -1)
                 ) {
                     let ran = random(questionMappings[last].length)
                     event_context.next_message = questionMappings[last][ran]    
