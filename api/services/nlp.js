@@ -97,6 +97,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update session
                 // TODO ask next question
                 let quantity = parseInt(message)
+                console.log("nlp quantity:\n", quantity)
                 if (quantity) {
                     new_session["$push"].confirmed_questions = "blanket_quantity"
                     confirm_count += 1
