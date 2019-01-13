@@ -91,21 +91,24 @@ exports.nlpSwitch = async(err, event_context) => {
             new_session["$push"] = {}
             new_session["$set"].user = {}
             if (
-                entity &&
-                entity.quantity && 
-                entity.quantity[0].confidence > confidenceLevel.quantity &&
                 event_context.new_session.last_question === "blanket_quantity"
             ) {
                 // TODO update blanket quantity
                 // TODO update session
                 // TODO ask next question
-                new_session["$push"].confirmed_questions = "blanket_quantity"
-                confirm_count += 1
-                let quantity = entity.quantity.value
-                new_session["$set"]["user.quantity"] =  quantity
-                let ran = random(questionMappings.location.length)
-                event_context.next_message = questionMappings.location[ran]
-                new_session["$set"].last_question = "location"
+                let quantity = parseInt(message)
+                if (quantity) {
+                    new_session["$push"].confirmed_questions = "blanket_quantity"
+                    confirm_count += 1
+                    let quantity = entity.quantity.value
+                    new_session["$set"]["user.quantity"] =  quantity
+                    let ran = random(questionMappings.location.length)
+                    event_context.next_message = questionMappings.location[ran]
+                    new_session["$set"].last_question = "location"
+                } else {
+                    let ran = random(questionMappings[last].length)
+                    event_context.next_message = questionMappings.error_again[0] + questionMappings[last][ran]
+                }
             } else if (
                 entity &&
                 entity.location &&
@@ -148,6 +151,8 @@ exports.nlpSwitch = async(err, event_context) => {
                 ) {
                     let ran = random(questionMappings[last].length)
                     event_context.next_message = questionMappings[last][ran]    
+                } else {
+                    next_message = "Ohoooo, I don't understand."
                 }
             }
             // prepare something different for asking last question before matching
@@ -204,6 +209,15 @@ exports.nlpSwitch = async(err, event_context) => {
         }
     }
     console.log(event_context)
+    if (!event_context.next_message) {
+        let ran = random(questionMappings.unsure.length)
+        event_context.next_message = questionMappings.unsure[ran]
+        if (session.last_question) {
+            let last = session.last_question
+            let ran  = questionMappings[last].length
+            event_context.next_message += questionMappings[last][ran]
+        }
+    }
     sender.sendTextMessage(event_context)
 }
 

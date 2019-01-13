@@ -18,10 +18,10 @@ const QuestionMappings = {
     ],
     blanket_quantity: {
         donor: [
-            "How many blankets do you want to donate?"
+            "How many blankets do you want to donate? Please enter a number."
         ],
         donee: [
-            "How many blankets do you need? A rough number would be great."
+            "How many blankets do you need? A rough number would be great. Please enter a number."
         ] 
     },
     location: {
@@ -45,6 +45,9 @@ const QuestionMappings = {
     done: [
         "That was all I can do, I have to say goodbye.",
         "This is all I can offer, if you need to do this again, please come by tomorrow."
+    ],
+    unsure: [
+        "Sorry, I am not sure if I understand."
     ]
 }
 
