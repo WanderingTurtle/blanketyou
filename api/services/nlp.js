@@ -106,8 +106,8 @@ exports.nlpSwitch = async(err, event_context) => {
                     event_context.next_message = questionMappings.location[ran]
                     new_session["$set"].last_question = "location"
                 } else {
-                    let ran = random(questionMappings[last].length)
-                    event_context.next_message = questionMappings.error_again[0] + questionMappings[last][ran]
+                    let ran = random(questionMappings["blanket_quantity"].length)
+                    event_context.next_message = questionMappings.error_again[0] + questionMappings["blanket_quantity"][ran]
                 }
             } else if (
                 entity &&
@@ -217,7 +217,7 @@ exports.nlpSwitch = async(err, event_context) => {
         event_context.next_message = questionMappings.unsure[ran]
         if (session.last_question) {
             let last = session.last_question
-            let ran  = questionMappings[last].length
+            ran  = questionMappings[last].length
             event_context.next_message += questionMappings[last][ran]
         }
     }
