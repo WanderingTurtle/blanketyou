@@ -35,7 +35,7 @@ exports.sendTextMessage = async (event_context) => {
         session.updateSession(event_context)
     }).catch(err => {
         console.log("message sender\nFailed calling send API for %s", messageData.recipient.id)
-        console.log(err)
+        console.log(err.body)
         log.error("Failed calling Send API for %s, %s", messageData.recipient.id, JSON.stringify(err));
     }) 
 }
