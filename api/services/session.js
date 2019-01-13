@@ -72,7 +72,7 @@ exports.updateSession = async (event_context) => {
         }
     }
     await SessionModel.findByIdAndUpdate(
-        {_id: event_context.session._id}, 
+        event_context.session._id, 
         new_session,
         {new: true, upsert: true}
     ).then(
@@ -81,6 +81,7 @@ exports.updateSession = async (event_context) => {
                 log.error(new Error("No session was updated. Previous session: \n" + JSON.stringify(event_context.session)))
             } else {
                 console.log("session\nupdated session for %s", session._id)
+                console.log("updated session: \n", session)
             }
         },
         err => {
