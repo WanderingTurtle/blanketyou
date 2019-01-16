@@ -22,7 +22,14 @@ exports.register = async (identity, event_context) => {
 exports.update = async (event_context) => {
     let dbModel = findModel(event_context.session.identity)
     if (dbModel === null) return
-    let newUser = event_context.session.user
+    let session = event_context.session
+    let newUser = {$set:{}}
+    for (let attr of Object.keys(session)) {
+        if (attr.startsWith('user')) {
+            let attr1 = attr.split('_')[1]
+            newUser.$set[attr1] = session[attr]
+        }
+    }
     newUser._id = event_context.session.psid
     await dbModel.findByIdAndUpdate(
         newUser._id, newUser, {new: true, upsert: true}

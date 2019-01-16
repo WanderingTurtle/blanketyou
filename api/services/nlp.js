@@ -104,7 +104,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 if (quantity) {
                     new_session["$push"].confirmed_questions = "blanket_quantity"
                     confirm_count += 1
-                    new_session["$set"].user.quantity = quantity
+                    new_session["$set"].user_quantity = quantity
                     let ran = random(questionMappings.location[session.identity].length)
                     event_context.next_message = questionMappings.location[session.identity][ran]
                     new_session["$set"].last_question = "location"
@@ -125,7 +125,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 new_session["$push"].confirmed_questions = "location"
                 confirm_count += 1
                 let addr = entity.location.value
-                new_session["$set"].user.address = addr
+                new_session["$set"].user_address = addr
                 let ran = random(questionMappings.email.length)
                 event_context.next_message = questionMappings.email[ran]
                 new_session["$set"].last_question = "email"
@@ -141,7 +141,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 new_session["$push"].confirmed_questions = "email"
                 confirm_count += 1
                 let email = entity.email.value
-                new_session["$set"].user.email = email
+                new_session["$set"].user_email = email
             } else {
                 // TODO handle unknown messages
                 console.log("nlp:\nreceived unknown message")
@@ -156,8 +156,13 @@ exports.nlpSwitch = async(err, event_context) => {
                         session.confirmed_questions.indexOf(last) === -1
                     )
                 ) {
-                    let ran = random(questionMappings[last].length)
-                    event_context.next_message = questionMappings[last][ran]    
+                    if (questionMappings[last].donor) {
+                        let ran = random(questionMappings[last][session.identity].length)
+                        event_context.next_message = questionMappings[last][session.identity][ran]
+                    } else {
+                        let ran = random(questionMappings[last].length)
+                        event_context.next_message = questionMappings[last][ran]    
+                    }
                 } else {
                     next_message = "Ohoooo, I don't understand."
                 }
