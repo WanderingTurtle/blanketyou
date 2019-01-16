@@ -33,6 +33,9 @@ exports.nlpSwitch = async(err, event_context) => {
     let confirm_count = session.confirmed_questions? session.confirmed_questions.length:0 
     let new_session = event_context.new_session
     new_session["$set"] = {}
+    if (session.user) {
+        new_session['$set'].user = JSON.parse(JSON.stringify(session.user))
+    }
     if (err) {
         // TODO handle error messages
     } else {
@@ -101,11 +104,12 @@ exports.nlpSwitch = async(err, event_context) => {
                 if (quantity) {
                     new_session["$push"].confirmed_questions = "blanket_quantity"
                     confirm_count += 1
-                    new_session["$set"]["user.quantity"] = quantity
-                    let ran = random(questionMappings.location.length)
+                    new_session["$set"].user.quantity = quantity
+                    let ran = random(questionMappings.location[session.identity].length)
                     event_context.next_message = questionMappings.location[session.identity][ran]
                     new_session["$set"].last_question = "location"
                 } else {
+                    console.log('not found quantity')
                     let ran = random(questionMappings["blanket_quantity"].length)
                     event_context.next_message = questionMappings.error_again[0] + questionMappings["blanket_quantity"][ran]
                 }
@@ -121,7 +125,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 new_session["$push"].confirmed_questions = "location"
                 confirm_count += 1
                 let addr = entity.location.value
-                new_session["$set"]["user.address"] = addr
+                new_session["$set"].user.address = addr
                 let ran = random(questionMappings.email.length)
                 event_context.next_message = questionMappings.email[ran]
                 new_session["$set"].last_question = "email"
@@ -137,7 +141,7 @@ exports.nlpSwitch = async(err, event_context) => {
                 new_session["$push"].confirmed_questions = "email"
                 confirm_count += 1
                 let email = entity.email.value
-                new_session["$set"]["user.email"] = email
+                new_session["$set"].user.email = email
             } else {
                 // TODO handle unknown messages
                 console.log("nlp:\nreceived unknown message")
