@@ -221,8 +221,13 @@ exports.nlpSwitch = async(err, event_context) => {
         event_context.next_message = questionMappings.unsure[ran]
         if (session.last_question) {
             let last = session.last_question
-            ran  = questionMappings[last].length
-            event_context.next_message += questionMappings[last][ran]
+            if (questionMappings[last].donor) {
+                ran  = questionMappings[last][session.identity].length
+                event_context.next_message += questionMappings[last][session.identity][ran]
+            } else {
+                ran = questionMappings[last].length
+                event_context.next_message += questionMappings[last][ran]
+            }
         }
     }
     sender.sendTextMessage(event_context)
