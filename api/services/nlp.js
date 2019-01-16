@@ -30,7 +30,7 @@ exports.nlpSwitch = async(err, event_context) => {
     console.log("nlp:\n message format",message)
     let entity = message.nlp.entities
     let session = event_context.session
-    let confirm_count = session.confirmed_questions? 0 : session.confirmed_questions.length
+    let confirm_count = session.confirmed_questions? session.confirmed_questions.length:0 
     let new_session = event_context.new_session
     new_session["$set"] = {}
     if (err) {
@@ -91,20 +91,19 @@ exports.nlpSwitch = async(err, event_context) => {
             new_session["$push"] = {}
             new_session["$set"].user = {}
             if (
-                event_context.new_session.last_question === "blanket_quantity"
+                session.last_question === "blanket_quantity"
             ) {
                 // TODO update blanket quantity
                 // TODO update session
                 // TODO ask next question
-                let quantity = parseInt(message)
+                let quantity = parseInt(message.text)
                 console.log("nlp quantity:\n", quantity)
                 if (quantity) {
                     new_session["$push"].confirmed_questions = "blanket_quantity"
                     confirm_count += 1
-                    let quantity = entity.quantity.value
-                    new_session["$set"]["user.quantity"] =  quantity
+                    new_session["$set"]["user.quantity"] = quantity
                     let ran = random(questionMappings.location.length)
-                    event_context.next_message = questionMappings.location[ran]
+                    event_context.next_message = questionMappings.location[session.identity][ran]
                     new_session["$set"].last_question = "location"
                 } else {
                     let ran = random(questionMappings["blanket_quantity"].length)
