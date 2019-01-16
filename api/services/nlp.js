@@ -33,9 +33,6 @@ exports.nlpSwitch = async(err, event_context) => {
     let confirm_count = session.confirmed_questions? session.confirmed_questions.length:0 
     let new_session = event_context.new_session
     new_session["$set"] = {}
-    if (session.user) {
-        new_session['$set'].user = JSON.parse(JSON.stringify(session.user))
-    }
     if (err) {
         // TODO handle error messages
     } else {
@@ -92,7 +89,6 @@ exports.nlpSwitch = async(err, event_context) => {
         // questions that count toward confirmed_questions
         if (session.identity) {
             new_session["$push"] = {}
-            new_session["$set"].user = {}
             if (
                 session.last_question === "blanket_quantity"
             ) {

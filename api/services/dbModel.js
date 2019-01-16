@@ -10,8 +10,7 @@ var sessionSchema = new Schema({
     psid: {type: String, required: true}, // facebook user id
     identity: {type: String},             // donor, donee, or admin
     last_question: {type: String},
-    confirmed_questions: [{type: String}],
-    user: {type: Object} 
+    confirmed_questions: [{type: String}]
 }, {
     timestamps: timestamp_spec
 })
