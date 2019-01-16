@@ -24,11 +24,10 @@ exports.update = async (event_context) => {
     if (dbModel === null) return
     let session = event_context.session
     let newUser = {$set:{}}
-    for (let attr of Object.keys(session)) {
-        if (attr.startsWith('user')) {
-            let attr1 = attr.split('_')[1]
-            newUser.$set[attr1] = session[attr]
-        }
+    for (let record of session.confirmed_questions) {
+        let pair = record.split(',')
+        let key = pair[0], val = pair[1]
+        newUser['$set'][key] = val
     }
     newUser._id = event_context.session.psid
     await dbModel.findByIdAndUpdate(

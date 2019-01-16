@@ -102,9 +102,9 @@ exports.nlpSwitch = async(err, event_context) => {
                 let quantity = parseInt(message.text)
                 console.log("nlp quantity:\n", quantity)
                 if (quantity) {
-                    new_session["$push"].confirmed_questions = "blanket_quantity"
+                    new_session["$push"].confirmed_questions = "blanket_quantity," + message.text
                     confirm_count += 1
-                    new_session["$set"].user_quantity = quantity
+                    //new_session["$set"].user_quantity = quantity
                     let ran = random(questionMappings.location[session.identity].length)
                     event_context.next_message = questionMappings.location[session.identity][ran]
                     new_session["$set"].last_question = "location"
@@ -122,10 +122,10 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update donor/donee address
                 // TODO update session
                 // TODO ask next question
-                new_session["$push"].confirmed_questions = "location"
-                confirm_count += 1
                 let addr = entity.location.value
-                new_session["$set"].user_address = addr
+                new_session["$push"].confirmed_questions = "location," + addr
+                confirm_count += 1
+                // new_session["$set"].user_address = addr
                 let ran = random(questionMappings.email.length)
                 event_context.next_message = questionMappings.email[ran]
                 new_session["$set"].last_question = "email"
@@ -138,10 +138,10 @@ exports.nlpSwitch = async(err, event_context) => {
                 // TODO update donor/donee email
                 // TODO update session
                 // TODO ask next question
-                new_session["$push"].confirmed_questions = "email"
-                confirm_count += 1
                 let email = entity.email.value
-                new_session["$set"].user_email = email
+                new_session["$push"].confirmed_questions = "email," + email
+                confirm_count += 1
+                //new_session["$set"].user_email = email
             } else {
                 // TODO handle unknown messages
                 console.log("nlp:\nreceived unknown message")
